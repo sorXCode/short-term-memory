@@ -1,0 +1,3 @@
+*.py[ca]
+*.cpython
+*/pycache/
