@@ -1,0 +1,11 @@
+<a href="{% url 'stm:home' %}"> <--Go back </a>
+
+{% if form %}
+<form method="post">
+{% csrf_token %}
+{{form.as_p}}
+<button type="submit">Submit</button>
+<button type="reset">Reset</button>
+</form>
+
+{% endif %}

@@ -32,3 +32,5 @@ class UserLoginForm(AuthenticationForm):
         #only one user will be returned by the filter. we can index with [0]
             username = _user.first().username
         return username
+
+# class MemoryCreateForm(Create)

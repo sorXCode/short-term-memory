@@ -1,8 +1,18 @@
-{% if request.user.is_authenticated %}
-<h2>Welcome {{request.user}}</h1>
-<a href="{% url 'stm:logout' %}">Logout</a>
-
-{% else %}
+{% if not request.user.is_authenticated %}
 <a href="{% url 'stm:signup' %}">Signup</a>
 <a href="{% url 'stm:login' %}">Login</a>
+
+{% else %}
+<h2>Welcome {{request.user}}</h1>
+{% if thoughts %}
+{% for thought in thoughts %}
+<p>I was thinking of {{thought.title}} at {{thought.created_at|time:""}}<br>
+{{thought.description|truncatewords:"3"}}</p>
+{% endfor %}
+{% else %}  
+Add new thought
+{% endif %}
+<br>
+<a href="{% url 'stm:create' %}">Add thought</a>
+<a href="{% url 'stm:logout' %}">Logout</a>
 {% endif %}

@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, ListView
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import UserSignupForm, UserLoginForm
 from .models import memory
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView,PasswordChangeView
 
 
 class Signup(CreateView):
@@ -23,6 +23,10 @@ class Signup(CreateView):
                 login(request, user)
                 return redirect('stm:home')
         return render(request, self.template_name, {'form': self.form_class(request.POST)})
+class Login(LoginView):
+    form_class = UserLoginForm
+    template_name = "stm/login.html"
+    redirect_field_name = "stm:home"
 
 
 class HomeView(ListView):
@@ -30,7 +34,25 @@ class HomeView(ListView):
     model = memory
     template_name = 'stm/home.html'
 
-class Login(LoginView):
-    form_class = UserLoginForm
-    template_name = "stm/login.html"
-    redirect_field_name = "stm:home"
+
+class MemoryCreateView(LoginRequiredMixin, CreateView):
+    model = memory
+    template_name = "stm/create.html"
+    fields = ('title', 'description',)
+    login_url = "stm:login"
+    success_url = "stm:home"
+    
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+        """
+        form = self.get_form()
+        if form.is_valid():
+            form_object = form.save(commit=False)
+            form_object.user_id = get_user_model().objects.get(username=request.user).id
+            form.save()
+            return redirect(self.success_url)
+        else:
+            return self.form_invalid(form)
