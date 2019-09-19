@@ -1,8 +1,14 @@
 {% if form %} 
 <form method="post">
 {% csrf_token %}
-{{form.as_p}}
+{% for formm in form %}
+<!-- <p>{{formm.id_for_label}}</p> -->
+<p>{{formm.label}} {{formm}}</p>
+</p>{{formm.errors}}</p>
+{% comment %} {{formm.help_text}} {% endcomment %}
 
+{% endfor %}
 <button type="submit">SignUp</button>
 </form>
 {% endif %}
+{{request.messages}}

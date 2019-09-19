@@ -1,0 +1,10 @@
+{% if form %}
+
+<form method="post">
+{% csrf_token %}
+{{form.as_p}}
+<button type="submit">Login</button>
+</form>
+{% endif %}
+
+<a href="{% url 'stm:signup' %}">Signup</a>

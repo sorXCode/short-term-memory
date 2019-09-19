@@ -1,1 +1,8 @@
-Welcome
+{% if request.user.is_authenticated %}
+<h2>Welcome {{request.user}}</h1>
+<a href="{% url 'stm:logout' %}">Logout</a>
+
+{% else %}
+<a href="{% url 'stm:signup' %}">Signup</a>
+<a href="{% url 'stm:login' %}">Login</a>
+{% endif %}
