@@ -1,4 +1,5 @@
-{% if form %} 
+{% if form %}
+<a href="{% url 'stm:login' %}">Login</a>
 <form method="post">
 {% csrf_token %}
 {% for formm in form %}

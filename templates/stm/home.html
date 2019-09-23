@@ -1,17 +1,20 @@
 {% if not request.user.is_authenticated %}
-<a href="{% url 'stm:signup' %}">Signup</a>
-<a href="{% url 'stm:login' %}">Login</a>
+    <a href="{% url 'stm:signup' %}">Signup</a>
+    <a href="{% url 'stm:login' %}">Login</a>
 
 {% else %}
-<h2>Welcome {{request.user}}</h1>
-{% if thoughts %}
-{% for thought in thoughts %}
-<p>I was thinking of {{thought.title}} at {{thought.created_at|time:""}}<br>
-{{thought.description|truncatewords:"3"}}</p>
-{% endfor %}
-{% else %}  
-Add new thought
-{% endif %}
+    <h2>Welcome {{request.user}}</h1>
+    {% if thoughts %}
+        {% for thought in thoughts %}
+        <p>{{thought.thought}} at {{thought.created_at|time:""}} <button>thinking alike</button><br>
+            {% if request.user == thought.user %}
+                <a href="{% url 'stm:edit' %}"> Edit </a>
+            {% endif %}
+        </p>
+        {% endfor %}
+        {% else %}
+        <strong> Your mind is clean! </strong>
+    {% endif %}
 <br>
 <a href="{% url 'stm:create' %}">Add thought</a>
 <a href="{% url 'stm:logout' %}">Logout</a>

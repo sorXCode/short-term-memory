@@ -33,12 +33,18 @@ class HomeView(ListView):
     context_object_name = 'thoughts'
     model = memory
     template_name = 'stm/home.html'
+    # queryset = "my_thoughts"
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(request.user)
+    
+    
 
 
 class MemoryCreateView(LoginRequiredMixin, CreateView):
     model = memory
     template_name = "stm/create.html"
-    fields = ('title', 'description',)
+    fields = ('thought',)
     login_url = "stm:login"
     success_url = "stm:home"
     
@@ -56,3 +62,5 @@ class MemoryCreateView(LoginRequiredMixin, CreateView):
             return redirect(self.success_url)
         else:
             return self.form_invalid(form)
+
+# class MemoryEditView(LoginRequiredMixin, E)

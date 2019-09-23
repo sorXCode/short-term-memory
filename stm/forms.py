@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate
 from django import forms
+from .models import memory
 import string
 from django.utils.translation import ugettext_lazy as _
 
@@ -33,4 +34,10 @@ class UserLoginForm(AuthenticationForm):
             username = _user.first().username
         return username
 
-# class MemoryCreateForm(Create)
+class MemoryEditForm(forms.ModelForm):
+    
+    class Meta:
+        model = memory
+        fields = ("thought", )
+
+    # def clean_thought
