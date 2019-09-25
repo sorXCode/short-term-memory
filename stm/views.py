@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect, reverse
-from django.views.generic import CreateView, ListView
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.views.generic import CreateView, ListView, UpdateView
 from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import UserSignupForm, UserLoginForm
 from .models import memory
-from django.contrib.auth.views import LoginView,PasswordChangeView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 
 
 class Signup(CreateView):
@@ -23,6 +23,8 @@ class Signup(CreateView):
                 login(request, user)
                 return redirect('stm:home')
         return render(request, self.template_name, {'form': self.form_class(request.POST)})
+
+
 class Login(LoginView):
     form_class = UserLoginForm
     template_name = "stm/login.html"
@@ -33,12 +35,9 @@ class HomeView(ListView):
     context_object_name = 'thoughts'
     model = memory
     template_name = 'stm/home.html'
-    # queryset = "my_thoughts"
-    
+
     def get_queryset(self):
-        return super().get_queryset().filter(request.user)
-    
-    
+        return self.model.objects.filter(user=self.request.user)
 
 
 class MemoryCreateView(LoginRequiredMixin, CreateView):
@@ -47,7 +46,6 @@ class MemoryCreateView(LoginRequiredMixin, CreateView):
     fields = ('thought',)
     login_url = "stm:login"
     success_url = "stm:home"
-    
 
     def post(self, request, *args, **kwargs):
         """
@@ -63,4 +61,9 @@ class MemoryCreateView(LoginRequiredMixin, CreateView):
         else:
             return self.form_invalid(form)
 
-# class MemoryEditView(LoginRequiredMixin, E)
+class MemoryEditView(LoginRequiredMixin, UpdateView):
+    model = memory
+    template_name = "stm/update.html"
+    fields = ('thought',)
+    success_url = "stm:home"
+    # login_url = "stm:login"

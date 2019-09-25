@@ -8,7 +8,7 @@
         {% for thought in thoughts %}
         <p>{{thought.thought}} at {{thought.created_at|time:""}} <button>thinking alike</button><br>
             {% if request.user == thought.user %}
-                <a href="{% url 'stm:edit' %}"> Edit </a>
+                <a href="{% url 'stm:edit' thought.id %}"> Edit </a>
             {% endif %}
         </p>
         {% endfor %}
